@@ -3,9 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Ejercicio 6-2</title>
 </head>
 <body>
-    
+
+<h2>Operaciones Aritméticas, Lógicas y de Bits</h2>
+
+<label for="valor1">Primer Valor:</label>
+<input type="text" id="valor1">
+<br><br>
+
+<label for="valor2">Segundo Valor:</label>
+<input type="text" id="valor2">
+<br><br>
+
+<label for="operador">Selecciona Operador:</label>
+<select id="operador">
+  <option value="+">Suma (+)</option>
+  <option value="-">Resta (-)</option>
+  <option value="*">Multiplicación (*)</option>
+  <option value="/">División (/)</option>
+  <option value="%">Módulo (%)</option>
+
+  <option value="&&">AND Lógico (&&)</option>
+  <option value="||">OR Lógico (||)</option>
+
+  <option value="&">AND Bit a Bit (&)</option>
+  <option value="|">OR Bit a Bit (|)</option>
+  <option value="^">XOR Bit a Bit (^)</option>
+  <option value="<<">Desplazar a la izquierda (<<)</option>
+  <option value=">>">Desplazar a la derecha (>>)</option>
+</select>
+<br><br>
+
+<button onclick="calcular()">Calcular</button>
+
+<p><strong>Resultado:</strong> <span id="resultado"></span></p>
+
+<script>
+    function calcular() {
+    let val1 = document.getElementById("valor1").value;
+    let val2 = document.getElementById("valor2").value;
+    let operador = document.getElementById("operador").value;
+    let resultado;
+    let num1 = Number(val1);
+    let num2 = Number(val2);
+
+    switch (operador) {
+        case '+':
+        resultado = num1 + num2;
+        break;
+        case '-':
+        resultado = num1 - num2;
+        break;
+        case '*':
+        resultado = num1 * num2;
+        break;
+        case '/':
+        resultado = num2 !== 0 ? (num1 / num2) : "Error: División por 0";
+        break;
+        case '%':
+        resultado = num1 % num2;
+        break;
+
+        case '&&':
+        resultado = (val1 && val2) ? "Verdadero" : "Falso";
+        break;
+        case '||':
+        resultado = (val1 || val2) ? "Verdadero" : "Falso";
+        break;
+
+        case '&':
+        resultado = num1 & num2;
+        break;
+        case '|':
+        resultado = num1 | num2;
+        break;
+        case '^':
+        resultado = num1 ^ num2;
+        break;
+        case '<<':
+        resultado = num1 << num2;
+        break;
+        case '>>':
+        resultado = num1 >> num2;
+        break;
+
+        default:
+        resultado = "Operador no válido";
+    }
+
+    document.getElementById("resultado").innerText = resultado;
+    }
+</script>
+
 </body>
 </html>
