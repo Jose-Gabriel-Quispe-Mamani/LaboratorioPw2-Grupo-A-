@@ -6,6 +6,42 @@
     <title>Ejercicio 6-1</title>
 </head>
 <body>
-    
+
+    <h2>Escribe tu propio texto:</h2>
+    <input type="text" id="textoInput" >
+    <button onclick="mostrarTexto()">Mostrar Texto</button>
+    <h2 id="miTexto"></h2>
+
+    <button onclick="aumentarLetra()">Aumentar</button>
+    <button onclick="disminuirLetra()">Disminuir</button>
+
+    <button onclick="cambiarColor()">Cambiar Color</button>
+
+    <script>
+        let tamaño = 16; 
+        let colores = ["red", "blue", "green", "purple", "orange"];
+        let indiceColor = 0;
+        
+        function mostrarTexto() {
+            let nuevoTexto = document.getElementById("textoInput").value;
+            document.getElementById("miTexto").innerText = nuevoTexto;
+        }
+        
+        function aumentarLetra() {
+            tamaño += 2;
+            document.getElementById("miTexto").style.fontSize = tamaño + "px";
+        }
+        
+        function disminuirLetra() {
+            tamaño -= 2;
+            document.getElementById("miTexto").style.fontSize = tamaño + "px";
+        }
+        
+        function cambiarColor() {
+            indiceColor = (indiceColor + 1) % colores.length;
+            document.getElementById("miTexto").style.color = colores[indiceColor];
+        }
+    </script>
+        
 </body>
 </html>
