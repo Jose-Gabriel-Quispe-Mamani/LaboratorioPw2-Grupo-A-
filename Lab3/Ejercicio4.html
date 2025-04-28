@@ -3,9 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Ejercicio 4</title>
 </head>
 <body>
+    <h2>Ingresa el URL de la sesión de Google Meet</h2>
+    <input type="text" id="meetUrl" placeholder="Pega el URL aquí">
+    <button onclick="extraerCodigo()">Obtener Código</button>
+    <p><strong>Código sin guiones:</strong> <span id="codigo"></span></p>
+
+    <script>
+        function extraerCodigo() {
+            let url = document.getElementById("meetUrl").value;
+            let partes = url.split("/");
+            let codigoConGuiones = partes[partes.length - 1];
+            let codigoSinGuiones = codigoConGuiones.replaceAll("-", "");
+            document.getElementById("codigo").innerText = codigoSinGuiones;
+        }
+    </script>
     
 </body>
 </html>
