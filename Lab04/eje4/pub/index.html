@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Convertidor Markdown</title>
+    <style>
+        textarea, #resultado { 
+            width: 100%; 
+            min-height: 200px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Convertidor Markdown → HTML</h1>
+    <textarea id="markdownInput" placeholder="Escribe tu Markdown aquí..."></textarea>
+    <button id="btnConvertir">Convertir</button>
+    <div id="resultado"></div>
+
+    <script>
+        document.getElementById('btnConvertir').addEventListener('click', async () => {
+            const texto = document.getElementById('markdownInput').value;
+            try {
+                const response = await fetch('/convertir', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ texto })
+                });
+                const data = await response.json();
+                document.getElementById('resultado').innerHTML = data.html;
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Error al convertir");
+            }
+        });
+    </script>
+</body>
+</html>
