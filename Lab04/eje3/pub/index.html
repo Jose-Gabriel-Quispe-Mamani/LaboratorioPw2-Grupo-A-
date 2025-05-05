@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Leer Poema desde Servidor</title>
+</head>
+<body>
+    <h1>Poema del Servidor</h1>
+    <button id="btnRecitar">Mostrar Poema</button>
+    <div id="poema" style="margin-top: 20px; white-space: pre-line;"></div>
+
+    <script>
+        document.getElementById('btnRecitar').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/recitar');
+                const data = await response.json();
+                document.getElementById('poema').innerHTML = data.texto;
+            } catch (error) {
+                console.error("Error:", error);
+                alert("¡Error al cargar el poema!");
+            }
+        });
+    </script>
+</body>
+</html>
