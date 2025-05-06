@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 2 - Confirmados por Región</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(cargarDatos);
+
+        function cargarDatos() {
+            fetch('data.json')
+                .then(response => response.json())
+                .then(data => {
+                    const resultados = [['Región', 'Total Confirmados']];
+
+                    data.forEach(regionData => {
+                        const total = regionData.confirmed.reduce((suma, item) => {
+                            return suma + parseInt(item.value);
+                        }, 0);
+                        resultados.push([regionData.region, total]);
+                    });
+
+                    dibujarGrafico(resultados);
+                })
+                .catch(error => {
+                    console.error("Error al cargar data.json:", error);
+                });
+        }
+
+        function dibujarGrafico(datos) {
+            const data = google.visualization.arrayToDataTable(datos);
+
+            const options = {
+                title: 'Total de Confirmados por Región',
+                hAxis: { title: 'Región' },
+                vAxis: { title: 'Confirmados' },
+                legend: 'none',
+                height: 500
+            };
+
+            const chart = new google.visualization.ColumnChart(document.getElementById('grafico'));
+            chart.draw(data, options);
+        }
+    </script>
+</head>
+<body>
+    <h1>Ejercicio 2 - Total de Confirmados por Región</h1>
+    <div id="grafico" style="width: 100%; max-width: 900px; margin: auto;"></div>
+</body>
+</html>

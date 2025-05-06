@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 5 - Evolución con Selector</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        let datosJSON = [];
+
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(cargarDatos);
+
+        function cargarDatos() {
+            fetch('data.json')
+                .then(response => response.json())
+                .then(data => {
+                    datosJSON = data;
+                    llenarSelector();
+                    const primera = data[0].region;
+                    mostrarGrafico(primera);
+                })
+                .catch(error => console.error("Error al cargar data.json:", error));
+        }
+
+        function llenarSelector() {
+            const selector = document.getElementById('regionSelect');
+            datosJSON.forEach(region => {
+                const option = document.createElement('option');
+                option.value = region.region;
+                option.textContent = region.region;
+                selector.appendChild(option);
+            });
+
+            selector.addEventListener('change', () => {
+                mostrarGrafico(selector.value);
+            });
+        }
+
+        function mostrarGrafico(regionNombre) {
+            const region = datosJSON.find(item => item.region === regionNombre);
+            if (!region) return;
+
+            const datos = [['Fecha', 'Confirmados']];
+            region.confirmed.forEach(item => {
+                datos.push([item.date, parseInt(item.value)]);
+            });
+
+            const data = google.visualization.arrayToDataTable(datos);
+
+            const options = {
+                title: `Evolución de Casos Confirmados - ${regionNombre}`,
+                hAxis: { title: 'Fecha', slantedText: true, slantedTextAngle: 45 },
+                vAxis: { title: 'Confirmados' },
+                curveType: 'function',
+                legend: 'none',
+                height: 500
+            };
+
+            const chart = new google.visualization.LineChart(document.getElementById('grafico'));
+            chart.draw(data, options);
+        }
+    </script>
+</head>
+<body>
+    <h1>Ejercicio 5 - Evolución con Selector de Región</h1>
+    <label for="regionSelect">Seleccione una región:</label>
+    <select id="regionSelect"></select>
+    <div id="grafico" style="width: 100%; max-width: 1000px; margin: auto; margin-top: 20px;"></div>
+</body>
+</html>

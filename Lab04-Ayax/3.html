@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 3 - Top 10 Regiones con Más Confirmados</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(cargarDatos);
+
+        function cargarDatos() {
+            fetch('data.json')
+                .then(response => response.json())
+                .then(data => {
+                    const totales = data.map(regionData => {
+                        const total = regionData.confirmed.reduce((suma, item) => suma + parseInt(item.value), 0);
+                        return { region: regionData.region, total: total };
+                    });
+
+                    const top10 = totales
+                        .sort((a, b) => b.total - a.total)
+                        .slice(0, 10);
+
+                    const resultados = [['Región', 'Confirmados']];
+                    top10.forEach(item => resultados.push([item.region, item.total]));
+
+                    dibujarGrafico(resultados);
+                })
+                .catch(error => console.error("Error al cargar data.json:", error));
+        }
+
+        function dibujarGrafico(datos) {
+            const data = google.visualization.arrayToDataTable(datos);
+
+            const options = {
+                title: 'Top 10 Regiones con Más Confirmados',
+                hAxis: { title: 'Confirmados' },
+                vAxis: { title: 'Región' },
+                legend: 'none',
+                height: 500
+            };
+
+            const chart = new google.visualization.BarChart(document.getElementById('grafico'));
+            chart.draw(data, options);
+        }
+    </script>
+</head>
+<body>
+    <h1>Ejercicio 3 - Top 10 Regiones con Más Confirmados</h1>
+    <div id="grafico" style="width: 100%; max-width: 900px; margin: auto;"></div>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problema 1 - Listado de Regiones</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        #regiones-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .region-item {
+            padding: 8px 12px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+        .region-item:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+        .region-name {
+            font-weight: bold;
+        }
+        .total-casos {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="regiones-container">
+        <h1>Regiones del Perú</h1>
+        <div id="loading" class="loading">Cargando datos...</div>
+        <div id="regiones-list"></div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+
+            $("#regiones-list").hide();
+            
+            $.getJSON("data.json", function(data) {
+                $("#loading").hide();
+                
+                $("#regiones-list").show();
+                
+                data.forEach(function(region) {
+                    const totalConfirmados = region.confirmed.reduce(
+                        (total, dia) => total + parseInt(dia.value), 0);
+                    
+                    const regionElement = `
+                        <div class="region-item">
+                            <span class="region-name">${region.region}</span>
+                            <span class="total-casos">${totalConfirmados} casos</span>
+                        </div>
+                    `;
+                    
+                    $("#regiones-list").append(regionElement);
+                });
+            }).fail(function() {
+                $("#loading").html(
+                    '<p style="color: red;">Error al cargar los datos. Verifica que data.json exista.</p>'
+                );
+            });
+        });
+    </script>
+</body>
+</html>

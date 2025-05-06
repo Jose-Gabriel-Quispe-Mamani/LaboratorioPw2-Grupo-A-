@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 4 - Evolución de Confirmados</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        const REGION_ESPECIFICA = "Amazonas"; 
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(cargarDatos);
+
+        function cargarDatos() {
+            fetch('data.json')
+                .then(response => response.json())
+                .then(data => {
+                    const region = data.find(item => item.region === REGION_ESPECIFICA);
+
+                    if (!region) {
+                        console.error("Región no encontrada.");
+                        return;
+                    }
+
+                    const resultados = [['Fecha', 'Confirmados']];
+                    region.confirmed.forEach(item => {
+                        resultados.push([item.date, parseInt(item.value)]);
+                    });
+
+                    dibujarGrafico(resultados);
+                })
+                .catch(error => console.error("Error al cargar data.json:", error));
+        }
+
+        function dibujarGrafico(datos) {
+            const data = google.visualization.arrayToDataTable(datos);
+
+            const options = {
+                title: `Evolución de Casos Confirmados - ${REGION_ESPECIFICA}`,
+                hAxis: { title: 'Fecha', slantedText: true, slantedTextAngle: 45 },
+                vAxis: { title: 'Confirmados' },
+                curveType: 'function',
+                legend: 'none',
+                height: 500
+            };
+
+            const chart = new google.visualization.LineChart(document.getElementById('grafico'));
+            chart.draw(data, options);
+        }
+    </script>
+</head>
+<body>
+    <h1>Ejercicio 4 - Evolución de Casos Confirmados</h1>
+    <div id="grafico" style="width: 100%; max-width: 1000px; margin: auto;"></div>
+</body>
+</html>

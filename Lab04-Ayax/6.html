@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 6 - Comparación de dos regiones</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        let datosJSON = [];
+
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(cargarDatos);
+
+        function cargarDatos() {
+            fetch('data.json')
+                .then(response => response.json())
+                .then(data => {
+                    datosJSON = data;
+                    llenarSelectores();
+                    mostrarComparacion(); // Por defecto al inicio
+                })
+                .catch(error => console.error("Error cargando data.json:", error));
+        }
+
+        function llenarSelectores() {
+            const select1 = document.getElementById('region1');
+            const select2 = document.getElementById('region2');
+
+            datosJSON.forEach(region => {
+                let option1 = document.createElement('option');
+                option1.value = region.region;
+                option1.textContent = region.region;
+
+                let option2 = option1.cloneNode(true);
+
+                select1.appendChild(option1);
+                select2.appendChild(option2);
+            });
+
+            select1.addEventListener('change', mostrarComparacion);
+            select2.addEventListener('change', mostrarComparacion);
+
+            select1.selectedIndex = 0;
+            select2.selectedIndex = 1; 
+        }
+
+        function mostrarComparacion() {
+            const nombre1 = document.getElementById('region1').value;
+            const nombre2 = document.getElementById('region2').value;
+
+            if (!nombre1 || !nombre2 || nombre1 === nombre2) return;
+
+            const region1 = datosJSON.find(r => r.region === nombre1);
+            const region2 = datosJSON.find(r => r.region === nombre2);
+
+            const datos = [['Fecha', nombre1, nombre2]];
+
+            for (let i = 0; i < region1.confirmed.length; i++) {
+                const fecha = region1.confirmed[i].date;
+                const val1 = parseInt(region1.confirmed[i].value);
+                const val2 = parseInt(region2.confirmed[i].value);
+                datos.push([fecha, val1, val2]);
+            }
+
+            const data = google.visualization.arrayToDataTable(datos);
+
+            const options = {
+                title: `Comparación de Confirmados: ${nombre1} vs ${nombre2}`,
+                hAxis: { title: 'Fecha', slantedText: true, slantedTextAngle: 45 },
+                vAxis: { title: 'Confirmados' },
+                curveType: 'function',
+                legend: { position: 'bottom' },
+                height: 500
+            };
+
+            const chart = new google.visualization.LineChart(document.getElementById('grafico'));
+            chart.draw(data, options);
+        }
+    </script>
+</head>
+<body>
+    <h1>Ejercicio 6 - Comparación entre dos regiones</h1>
+    <label for="region1">Región 1:</label>
+    <select id="region1"></select>
+
+    <label for="region2" style="margin-left: 20px;">Región 2:</label>
+    <select id="region2"></select>
+
+    <div id="grafico" style="width: 100%; max-width: 1000px; margin: auto; margin-top: 20px;"></div>
+</body>
+</html>
