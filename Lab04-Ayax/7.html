@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 7 - Evolución diaria</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        let datosJSON = [];
+
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(cargarDatos);
+
+        function cargarDatos() {
+            fetch('data.json')
+                .then(response => response.json())
+                .then(data => {
+                    datosJSON = data;
+                    llenarSelector();
+                    mostrarGrafico(data[0].region); // Región por defecto
+                })
+                .catch(error => console.error("Error al cargar data.json:", error));
+        }
+
+        function llenarSelector() {
+            const selector = document.getElementById('regionSelect');
+            datosJSON.forEach(region => {
+                const option = document.createElement('option');
+                option.value = region.region;
+                option.textContent = region.region;
+                selector.appendChild(option);
+            });
+
+            selector.addEventListener('change', () => {
+                mostrarGrafico(selector.value);
+            });
+        }
+
+        function mostrarGrafico(nombreRegion) {
+            const region = datosJSON.find(r => r.region === nombreRegion);
+            if (!region) return;
+
+            const datos = [['Fecha', 'Incremento Diario']];
+            const confirmados = region.confirmed;
+
+            for (let i = 1; i < confirmados.length; i++) {
+                const fecha = confirmados[i].date;
+                const anterior = parseInt(confirmados[i - 1].value);
+                const actual = parseInt(confirmados[i].value);
+                const incremento = actual - anterior;
+                datos.push([fecha, incremento]);
+            }
+
+            const data = google.visualization.arrayToDataTable(datos);
+
+            const options = {
+                title: `Incremento Diario de Confirmados - ${nombreRegion}`,
+                hAxis: { title: 'Fecha', slantedText: true, slantedTextAngle: 45 },
+                vAxis: { title: 'Incremento' },
+                legend: 'none',
+                height: 500,
+                colors: ['#d9534f']
+            };
+
+            const chart = new google.visualization.ColumnChart(document.getElementById('grafico'));
+            chart.draw(data, options);
+        }
+    </script>
+</head>
+<body>
+    <h1>Ejercicio 7 - Incremento Diario de Confirmados</h1>
+    <label for="regionSelect">Seleccione una región:</label>
+    <select id="regionSelect"></select>
+    <div id="grafico" style="width: 100%; max-width: 1000px; margin: auto; margin-top: 20px;"></div>
+</body>
+</html>
