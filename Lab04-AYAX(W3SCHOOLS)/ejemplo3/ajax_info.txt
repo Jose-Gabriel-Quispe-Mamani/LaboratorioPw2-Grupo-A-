@@ -1,0 +1,5 @@
+The XMLHttpRequest Object<br><br>
+The getAllResponseHeaders() function returns all the header information of a resource, like length, server-type, content-type, last-modified, etc:<br><br>
+
+accept-ranges: bytes cache-control: public, max-age=31009703 content-encoding: gzip content-length: 147 content-security-policy: frame-ancestors 'self' https://mycourses.w3schools.com https://pathfinder.w3schools.com;<br>
+content-type: text/plain date: Tue, 06 May 2025 13:56:34 GMT etag: "031a1e5bfb9db1:0" expires: Thu, 30 Apr 2026 11:44:57 GMT last-modified: Wed, 30 Apr 2025 11:06:18 GMT vary: Accept-Encoding x-content-security-policy: frame-ancestors 'self' https://mycourses.w3schools.com https://pathfinder.w3schools.com;
