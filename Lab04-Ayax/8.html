@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 8 - Promedio Confirmados</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        let datosRegiones = [];
+
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(cargarDatos);
+
+        function cargarDatos() {
+            fetch('data.json')
+                .then(response => response.json())
+                .then(data => {
+                    datosRegiones = data;
+                    dibujarGrafico();
+                })
+                .catch(error => console.error("Error al cargar data.json:", error));
+        }
+
+        function dibujarGrafico() {
+            const datos = [['Región', 'Promedio Confirmados']];
+
+            datosRegiones.forEach(region => {
+                const nombre = region.region.toLowerCase();
+                if (nombre !== "lima" && nombre !== "callao") {
+                    const valores = region.confirmed.map(item => parseInt(item.value));
+                    const suma = valores.reduce((acc, val) => acc + val, 0);
+                    const promedio = valores.length > 0 ? (suma / valores.length) : 0;
+                    datos.push([region.region, parseFloat(promedio.toFixed(2))]);
+                }
+            });
+
+            const data = google.visualization.arrayToDataTable(datos);
+
+            const options = {
+                title: 'Promedio de Casos Confirmados por Región (sin Lima ni Callao)',
+                hAxis: { title: 'Región', slantedText: true, slantedTextAngle: 45 },
+                vAxis: { title: 'Promedio Confirmados' },
+                legend: 'none',
+                height: 600,
+                colors: ['#5bc0de']
+            };
+
+            const chart = new google.visualization.ColumnChart(document.getElementById('grafico'));
+            chart.draw(data, options);
+        }
+    </script>
+</head>
+<body>
+    <h1>Ejercicio 8 - Promedio de Casos Confirmados por Región (sin Lima ni Callao)</h1>
+    <div id="grafico" style="width: 100%; max-width: 1200px; margin: auto;"></div>
+</body>
+</html>
