@@ -1,0 +1,5 @@
+The XMLHttpRequest Object<br><br>       
+
+The getResponseHeader() function is used to return specific header information from a resource, like length, server-type, content-type, last-modified, etc:<br><br>
+
+Last modified: Wed, 30 Apr 2025 11:06:18 GMT
