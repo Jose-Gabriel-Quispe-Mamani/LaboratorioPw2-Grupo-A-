@@ -1,6 +1,6 @@
 from django.db import models
 
-class Curso(models.Model):
+class Materia(models.Model):
     nombre = models.CharField(max_length=100)
 
     def __str__(self):
@@ -8,7 +8,7 @@ class Curso(models.Model):
 
 class Estudiante(models.Model):
     nombre = models.CharField(max_length=100)
-    curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
+    materias = models.ManyToManyField(Materia)
 
     def __str__(self):
         return self.nombre
