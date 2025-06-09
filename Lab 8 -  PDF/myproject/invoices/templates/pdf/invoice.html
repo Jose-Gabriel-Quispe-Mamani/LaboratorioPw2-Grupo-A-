@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Factura #{{ order_id }}</title>
+  <style>
+    body { font-family: sans-serif; }
+    .header { text-align: center; font-size: 24px; margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #333; padding: 8px; text-align: left; }
+    .footer { margin-top: 20px; font-size: 12px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="header">Factura #{{ order_id }}</div>
+  <p><strong>Fecha:</strong> {{ today }}</p>
+  <p><strong>Cliente:</strong> {{ customer_name }}</p>
+  <table>
+    <thead>
+      <tr><th>Descripcion</th><th>Cantidad</th><th>Precio</th></tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr><td>{{ item.description }}</td><td>{{ item.qty }}</td><td>{{ item.price }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p><strong>Total:</strong> {{ total }}</p>
+  <div class="footer">Gracias por su preferencia</div>
+</body>
+</html>
